@@ -61,7 +61,7 @@ import { Logo } from '../shared/logo';
       .burger { display: grid; }
       .sheet {
         display: block; position: absolute; left: 0; right: 0; top: 100%; padding: 8px 0 28px; background: #fff; color: var(--ink); box-shadow: var(--shadow);
-        clip-path: inset(0 0 100% 0); visibility: hidden; transition: clip-path 550ms var(--ease-in-out), visibility 0s 550ms;
+        clip-path: inset(0 0 100% 0); visibility: hidden; transition: clip-path 320ms var(--ease-in-out), visibility 0s 320ms;
       }
       .nav.is-open .sheet { clip-path: inset(0 0 0 0); visibility: visible; transition: clip-path 550ms var(--ease-in-out); }
       .sheet nav { display: grid; }

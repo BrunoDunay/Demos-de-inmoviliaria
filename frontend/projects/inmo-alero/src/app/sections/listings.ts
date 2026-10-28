@@ -3,11 +3,12 @@ import { Deal, Kind, Property } from '../core/content';
 import { Search, price } from '../core/search';
 import { Icon } from '../shared/icon';
 import { Reveal } from '../shared/reveal';
+import { SwipeDismiss } from '../shared/swipe-dismiss';
 
 @Component({
   selector: 'app-listings',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [Icon, Reveal],
+  imports: [Icon, Reveal, SwipeDismiss],
   template: `
     <section class="section listings" id="propiedades">
       <div class="container">
@@ -80,11 +81,12 @@ import { Reveal } from '../shared/reveal';
       </div>
 
       @if (search.open(); as p) {
-        <div class="overlay" (click)="close()" role="presentation"></div>
-        <div class="modal" role="dialog" aria-modal="true" [attr.aria-label]="p.title" #modal tabindex="-1">
+        <div class="overlay" [class.closing]="closing()" (click)="close()" role="presentation"></div>
+        <div class="modal" [class.closing]="closing()" swipeDismiss="y" swipeHandle=".grabber" swipeMedia="(max-width: 820px)" (dismiss)="close(true)" role="dialog" aria-modal="true" [attr.aria-label]="p.title" #modal tabindex="-1">
+          <span class="grabber" aria-hidden="true"></span>
           <button type="button" class="x" (click)="close()" aria-label="Cerrar"><app-icon name="close" [size]="20" /></button>
           <div class="gallery">
-            <div class="main">
+            <div class="main" (pointerdown)="swipeStart($event)" (pointerup)="swipeEnd($event, p)">
               @for (img of p.imgs; track img; let i = $index) {
                 <img [src]="'media/' + img + '.webp'" [alt]="p.title + ', foto ' + (i + 1)" width="1200" height="800" [class.on]="shot() === i" [attr.loading]="i === 0 ? 'eager' : 'lazy'" />
               }
@@ -132,20 +134,23 @@ import { Reveal } from '../shared/reveal';
     .head { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; margin-bottom: 32px; }
     .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding-bottom: 22px; margin-bottom: 28px; border-bottom: 1px solid var(--line); }
     .group { display: flex; gap: 4px; padding: 4px; border-radius: 12px; background: var(--paper); box-shadow: var(--shadow-sm); }
-    .f { white-space: nowrap; min-height: 40px; padding: 0 16px; border-radius: 9px; font-weight: 600; font-size: 0.9rem; color: var(--muted); transition: background-color 250ms ease, color 250ms ease; }
+    .f { white-space: nowrap; min-height: 40px; padding: 0 16px; border-radius: 9px; font-weight: 600; font-size: 0.9rem; color: var(--muted); transition: background-color 250ms ease, color 250ms ease, transform 140ms var(--ease-out); }
     .f.on { background: var(--pine); color: #fff; }
-    .f:not(.on):hover { color: var(--pine); background: var(--pine-soft); }
+    @media (hover: hover) and (pointer: fine) { .f:not(.on):hover { color: var(--pine); background: var(--pine-soft); } }
+    .f:active { transform: scale(0.97); }
     .count { margin-left: auto; display: flex; align-items: center; gap: 8px; color: var(--muted); }
     .count b { color: var(--ink); font-size: 1.1rem; }
     .z { display: inline-flex; align-items: center; gap: 4px; padding: 4px 6px 4px 10px; border-radius: 999px; background: var(--pine-soft); color: var(--pine); font-weight: 600; font-size: 0.85rem; }
     .z button { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; }
-    .z button:hover { background: rgb(30 58 47 / 12%); }
+    @media (hover: hover) and (pointer: fine) { .z button:hover { background: rgb(30 58 47 / 12%); } }
+    .z button:active { transform: scale(0.88); }
 
     .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
     .card { position: relative; display: flex; flex-direction: column; border-radius: var(--radius); background: var(--paper); box-shadow: var(--shadow-sm); overflow: hidden; animation: card-in 600ms var(--ease-out) both; animation-delay: calc(var(--i) * 60ms); transition: transform 450ms var(--ease-out), box-shadow 450ms var(--ease-out); }
     @keyframes card-in { from { opacity: 0; transform: translateY(18px); } }
     @media (hover: hover) { .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); } }
-    .media { position: relative; display: block; aspect-ratio: 3 / 2; overflow: hidden; background: var(--bg-2); cursor: zoom-in; }
+    .media { position: relative; display: block; aspect-ratio: 3 / 2; overflow: hidden; background: var(--bg-2); cursor: zoom-in; transition: scale 160ms cubic-bezier(0.23, 1, 0.32, 1); }
+    .media:active { scale: 0.985; }
     .media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity 600ms ease, transform 1000ms var(--ease-out); }
     .media .b { opacity: 0; transform: scale(1.06); }
     @media (hover: hover) {
@@ -158,7 +163,8 @@ import { Reveal } from '../shared/reveal';
     .tag { left: 12px; bottom: 12px; background: rgb(255 255 255 / 92%); color: var(--ink); }
     .photos { right: 12px; bottom: 12px; display: flex; align-items: center; gap: 5px; background: rgb(21 25 26 / 60%); color: #fff; backdrop-filter: blur(6px); }
     .fav { position: absolute; right: 12px; top: 12px; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgb(255 255 255 / 92%); color: var(--ink); transition: transform 350ms var(--ease-back), color 250ms ease; }
-    .fav:hover { transform: scale(1.1); }
+    @media (hover: hover) and (pointer: fine) { .fav:hover { transform: scale(1.1); } }
+    .fav:active { transform: scale(0.92); transition-duration: 120ms; }
     .fav.on { color: #d0473a; animation: like 500ms var(--ease-back); }
     @keyframes like { 40% { transform: scale(1.3); } }
     .body { display: flex; flex-direction: column; flex: 1; padding: 18px 20px 20px; }
@@ -170,7 +176,8 @@ import { Reveal } from '../shared/reveal';
     .specs app-icon { color: var(--pine-2); }
     .more { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; padding-top: 16px; width: fit-content; font-weight: 700; font-size: 0.9rem; color: var(--pine); }
     .more app-icon { transition: transform 350ms var(--ease-out); }
-    .more:hover app-icon { transform: translateX(4px); }
+    @media (hover: hover) and (pointer: fine) { .more:hover app-icon { transform: translateX(4px); } }
+    .more:active { opacity: 0.7; }
 
     .empty { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px; padding: 56px 20px; border-radius: var(--radius); border: 1.5px dashed var(--line); }
     .empty svg { width: 70px; fill: none; stroke: var(--brass); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
@@ -186,20 +193,31 @@ import { Reveal } from '../shared/reveal';
       transform: translate(-50%, -50%); animation: modal-in 500ms var(--ease-out); outline: none;
     }
     @keyframes modal-in { from { opacity: 0; transform: translate(-50%, -46%) scale(0.97); } }
+    .modal.closing { animation: modal-out 200ms var(--ease-out) forwards; pointer-events: none; }
+    @keyframes modal-out { to { opacity: 0; transform: translate(-50%, -48.5%) scale(0.98); } }
+    .overlay.closing { animation: fade-out 220ms ease forwards; }
+    @keyframes fade-out { to { opacity: 0; } }
+    .grabber { display: none; }
+    .main { touch-action: pan-y; }
+    .main img { -webkit-user-drag: none; user-select: none; }
     .x { position: absolute; right: 14px; top: 14px; z-index: 3; display: grid; place-items: center; width: 42px; height: 42px; border-radius: 50%; background: var(--paper); box-shadow: var(--shadow-sm); transition: transform 350ms var(--ease-back); }
-    .x:hover { transform: rotate(90deg); }
+    @media (hover: hover) and (pointer: fine) { .x:hover { transform: rotate(90deg); } }
+    .x:active { transform: scale(0.92); transition-duration: 120ms; }
     .gallery { padding: 14px; display: flex; flex-direction: column; gap: 10px; }
     .main { position: relative; aspect-ratio: 3 / 2.1; border-radius: 18px; overflow: hidden; background: var(--bg-2); }
     .main img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transform: scale(1.04); transition: opacity 500ms ease, transform 900ms var(--ease-out); }
     .main img.on { opacity: 1; transform: none; }
     .nav-btn { position: absolute; top: 50%; display: grid; place-items: center; width: 42px; height: 42px; margin-top: -21px; border-radius: 50%; background: rgb(255 255 255 / 90%); transition: transform 300ms var(--ease-back); }
-    .nav-btn:hover { transform: scale(1.1); }
+    @media (hover: hover) and (pointer: fine) { .nav-btn:hover { transform: scale(1.1); } }
+    .nav-btn:active { transform: scale(0.92); transition-duration: 120ms; }
     .prev { left: 12px; }
     .next { right: 12px; }
     .counter { position: absolute; left: 12px; bottom: 12px; padding: 4px 10px; border-radius: 8px; background: rgb(21 25 26 / 60%); color: #fff; font-size: 0.8rem; font-weight: 600; }
     .thumbs { display: flex; gap: 8px; }
     .thumbs button { flex: 1; aspect-ratio: 3 / 2; border-radius: 10px; overflow: hidden; opacity: 0.55; box-shadow: inset 0 0 0 0 var(--brass); transition: opacity 250ms ease, box-shadow 250ms ease; }
-    .thumbs button.on, .thumbs button:hover { opacity: 1; }
+    .thumbs button.on { opacity: 1; }
+    @media (hover: hover) and (pointer: fine) { .thumbs button:hover { opacity: 1; } }
+    .thumbs button:active { transform: scale(0.96); }
     .thumbs button.on { box-shadow: 0 0 0 2.5px var(--brass); }
     .thumbs img { width: 100%; height: 100%; object-fit: cover; }
     .detail { padding: 34px 30px 30px 18px; display: flex; flex-direction: column; }
@@ -219,6 +237,11 @@ import { Reveal } from '../shared/reveal';
     @media (max-width: 820px) {
       .modal { grid-template-columns: 1fr; top: auto; bottom: 0; left: 0; width: 100%; max-height: 92svh; border-radius: 24px 24px 0 0; transform: none; animation: sheet-in 500ms var(--ease-out); }
       @keyframes sheet-in { from { transform: translateY(40%); opacity: 0; } }
+      .modal.closing { animation: sheet-out 240ms var(--ease-out) forwards; }
+      @keyframes sheet-out { to { transform: translateY(100%); } }
+      /* Barra para arrastrar la hoja hacia abajo y cerrarla */
+      .grabber { display: block; position: absolute; z-index: 2; top: 0; left: 72px; right: 72px; height: 26px; touch-action: none; cursor: grab; }
+      .grabber::before { content: ''; position: absolute; left: 50%; top: 9px; width: 44px; height: 5px; margin-left: -22px; border-radius: 3px; background: rgb(21 25 26 / 20%); }
       .detail { padding: 6px 20px 28px; }
       .count { margin-left: 0; width: 100%; }
       .group { width: 100%; }
@@ -276,7 +299,36 @@ export class Listings {
     this.shot.update((s) => (s + dir + p.imgs.length) % p.imgs.length);
   }
 
-  protected close() {
-    this.search.open.set(null);
+  protected readonly closing = signal(false);
+  private sx = 0;
+  private sy = 0;
+
+  /** Cierra con una salida corta. "now" = ya salió arrastrándola (no se vuelve a animar). */
+  protected close(now = false) {
+    if (!this.search.open()) return;
+    const reduce = document.documentElement.classList.contains('reduce-motion');
+    if (now || reduce) {
+      this.closing.set(false);
+      this.search.open.set(null);
+      return;
+    }
+    if (this.closing()) return;
+    this.closing.set(true);
+    setTimeout(() => {
+      this.closing.set(false);
+      this.search.open.set(null);
+    }, 220);
+  }
+
+  /** Deslizar la foto principal a los lados cambia de foto (como en el celular). */
+  protected swipeStart(e: PointerEvent) {
+    this.sx = e.clientX;
+    this.sy = e.clientY;
+  }
+
+  protected swipeEnd(e: PointerEvent, p: Property) {
+    const dx = e.clientX - this.sx;
+    const dy = e.clientY - this.sy;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5) this.step(dx < 0 ? 1 : -1, p);
   }
 }

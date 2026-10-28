@@ -47,9 +47,10 @@ import { Reveal } from '../shared/reveal';
     .num { position: absolute; right: 22px; top: 22px; font-family: var(--font-display); font-size: 1.6rem; color: var(--line); transition: color 400ms ease; }
     h3 { margin-top: 22px; font-size: 1.8rem; }
     p { margin-top: 8px; color: var(--muted); font-size: 0.95rem; flex: 1; transition: color 400ms ease; }
-    .link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; width: fit-content; font-weight: 700; font-size: 0.9rem; color: var(--pine); transition: color 300ms ease; }
+    .link { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; width: fit-content; font-weight: 700; font-size: 0.9rem; color: var(--pine); transition: color 300ms ease, scale 160ms cubic-bezier(0.23, 1, 0.32, 1); }
+    .link:active { scale: 0.97; }
     .link app-icon { transition: transform 350ms var(--ease-out); }
-    .link:hover app-icon { transform: translateX(4px); }
+    @media (hover: hover) and (pointer: fine) { .link:hover app-icon { transform: translateX(4px); } }
     @media (max-width: 1000px) { .grid { grid-template-columns: 1fr 1fr; } }
     @media (max-width: 540px) { .grid { grid-template-columns: 1fr; } }
   `,

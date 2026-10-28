@@ -82,10 +82,11 @@ import { Icon } from '../shared/icon';
     .deal { display: inline-flex; gap: 4px; padding: 5px; border-radius: 14px 14px 0 0; background: rgb(255 255 255 / 92%); }
     .deal button { min-height: 40px; padding: 0 18px; border-radius: 10px; font-weight: 650; font-size: 0.92rem; color: var(--muted); transition: background-color 300ms ease, color 300ms ease; }
     .deal button.on { background: var(--pine); color: #fff; }
-    .deal button:not(.on):hover { color: var(--pine); }
+    @media (hover: hover) and (pointer: fine) { .deal button:not(.on):hover { color: var(--pine); } }
     .fields { display: grid; grid-template-columns: repeat(3, 1fr) auto; gap: 8px; padding: 10px; border-radius: 0 16px 16px 16px; background: #fff; box-shadow: var(--shadow-lg); }
     label { display: flex; flex-direction: column; gap: 2px; padding: 8px 14px; border-radius: 12px; transition: background-color 250ms ease; }
-    label:hover, label:focus-within { background: var(--bg); }
+    label:focus-within { background: var(--bg); }
+    @media (hover: hover) and (pointer: fine) { label:hover { background: var(--bg); } }
     label span { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
     select { appearance: none; border: 0; padding: 2px 22px 2px 0; background: transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231e3a2f' stroke-width='2.4' stroke-linecap='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") right center / 16px no-repeat; font-weight: 650; font-size: 1rem; cursor: pointer; }
     select:focus { outline: none; }

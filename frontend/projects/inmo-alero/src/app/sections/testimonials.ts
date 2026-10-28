@@ -53,9 +53,10 @@ import { Reveal } from '../shared/reveal';
     figcaption span { color: var(--muted); font-size: 0.92rem; }
     .controls { display: flex; align-items: center; gap: 14px; margin-top: 34px; }
     .controls > button { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 12px; box-shadow: inset 0 0 0 1.5px var(--line); transition: background-color 250ms ease, color 250ms ease, box-shadow 250ms ease; }
-    .controls > button:hover { background: var(--pine); color: #fff; box-shadow: none; }
+    @media (hover: hover) and (pointer: fine) { .controls > button:hover { background: var(--pine); color: #fff; box-shadow: none; } }
     .bars { display: flex; gap: 6px; flex: 1; max-width: 220px; }
-    .bar { flex: 1; height: 24px; display: flex; align-items: center; }
+    .bar { flex: 1; height: 24px; display: flex; align-items: center; transition: scale 160ms cubic-bezier(0.23, 1, 0.32, 1); }
+    .bar:active { scale: 0.94; }
     .bar span { position: relative; display: block; width: 100%; height: 3px; border-radius: 3px; background: var(--line); overflow: hidden; }
     .bar span::after { content: ''; position: absolute; inset: 0; background: var(--brass); transform: scaleX(0); transform-origin: left; }
     .bar.on span::after { animation: progress 7s linear forwards; }

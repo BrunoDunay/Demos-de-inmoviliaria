@@ -35,7 +35,7 @@ import { Reveal } from '../shared/reveal';
     li { position: relative; }
     .dot { position: relative; display: grid; place-items: center; width: 52px; height: 52px; border-radius: 50%; background: var(--bg); box-shadow: inset 0 0 0 2px var(--line); font-family: var(--font-display); font-size: 1.4rem; color: var(--muted); transition: background-color 400ms ease, color 400ms ease, box-shadow 400ms ease, transform 500ms var(--ease-back); }
     .steps.is-in .dot { background: var(--pine); color: #fff; box-shadow: none; transition-delay: calc(400ms + var(--i) * 420ms); }
-    li:hover .dot { transform: scale(1.1) rotate(-6deg); }
+    @media (hover: hover) and (pointer: fine) { li:hover .dot { transform: scale(1.1) rotate(-6deg); } }
     h3 { margin-top: 20px; font-size: 1.7rem; }
     p { margin-top: 8px; color: var(--muted); }
     @media (max-width: 860px) {

@@ -39,18 +39,19 @@ import { Reveal } from '../shared/reveal';
     .grid { display: grid; grid-template-columns: 1.1fr 1fr 1fr; gap: 22px; align-items: center; }
     .intro .btn { margin-top: 28px; }
     .card { border-radius: var(--radius); background: var(--paper); overflow: hidden; box-shadow: var(--shadow-sm); transition: transform 450ms var(--ease-out), box-shadow 450ms ease; }
-    .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); }
+    @media (hover: hover) and (pointer: fine) { .card:hover { transform: translateY(-6px); box-shadow: var(--shadow-lg); } }
     .photo { position: relative; aspect-ratio: 4 / 4.4; overflow: hidden; background: var(--line); }
     .photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 20%; transition: transform 900ms var(--ease-out); }
-    .card:hover .photo img { transform: scale(1.05); }
+    @media (hover: hover) and (pointer: fine) { .card:hover .photo img { transform: scale(1.05); } }
     .years { position: absolute; left: 12px; bottom: 12px; padding: 6px 12px; border-radius: 10px; background: rgb(255 255 255 / 92%); font-size: 0.8rem; font-weight: 600; }
     .years b { color: var(--pine); }
     .body { padding: 18px 20px 20px; }
     h3 { font-size: 1.6rem; }
     .role { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--brass); }
     blockquote { margin: 12px 0 0; color: var(--ink-2); font-size: 0.95rem; }
-    .talk { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; min-height: 42px; padding: 0 16px; border-radius: 10px; background: var(--pine-soft); color: var(--pine); font-weight: 700; font-size: 0.88rem; transition: background-color 250ms ease, color 250ms ease; }
-    .talk:hover { background: var(--pine); color: #fff; }
+    .talk { display: inline-flex; align-items: center; gap: 8px; margin-top: 16px; min-height: 42px; padding: 0 16px; border-radius: 10px; background: var(--pine-soft); color: var(--pine); font-weight: 700; font-size: 0.88rem; transition: background-color 250ms ease, color 250ms ease, scale 160ms cubic-bezier(0.23, 1, 0.32, 1); }
+    .talk:active { scale: 0.96; }
+    @media (hover: hover) and (pointer: fine) { .talk:hover { background: var(--pine); color: #fff; } }
     @media (max-width: 1000px) { .grid { grid-template-columns: 1fr 1fr; } .intro { grid-column: 1 / -1; } }
     @media (max-width: 560px) { .grid { grid-template-columns: 1fr; } }
   `,
